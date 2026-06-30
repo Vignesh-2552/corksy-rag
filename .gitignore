@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environment
+.venv
+
+# Environment / secrets — NEVER commit these
+.env
+.env.local
+.env.*.local
+
+# HuggingFace model cache (can be large)
+.cache/
+~/.cache/huggingface/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
