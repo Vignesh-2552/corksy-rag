@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     chunk_size: int = 512
     chunk_overlap: int = 64
 
+    # Retrieval
+    retrieval_top_k: int = 5
+
     # Upload
     supported_extensions: str = ".pdf,.txt,.json,.csv,.md"
     max_file_size_mb: int = 50

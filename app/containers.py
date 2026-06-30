@@ -4,12 +4,15 @@ from qdrant_client import AsyncQdrantClient
 
 from app.config import settings
 from app.db.qdrant import QdrantRepository
+from app.services.generation import GenerationService
 from app.services.indexing import IndexingService
+from app.services.llm_factory import build_llm
+from app.services.retrieval import RetrievalService
 
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
-        modules=["app.api.v1.upload"],
+        modules=["app.api.v1.upload", "app.api.v1.ask"],
     )
 
     qdrant_client = providers.Singleton(
@@ -30,8 +33,26 @@ class Container(containers.DeclarativeContainer):
         model_name=settings.embedding_model,
     )
 
+    llm = providers.Singleton(
+        build_llm,
+        provider=settings.llm_provider,
+        model=settings.llm_model,
+        api_key=settings.llm_api_key,
+    )
+
     indexing_service = providers.Factory(
         IndexingService,
         qdrant_repo=qdrant_repo,
         embeddings=embeddings,
+    )
+
+    retrieval_service = providers.Factory(
+        RetrievalService,
+        qdrant_repo=qdrant_repo,
+        embeddings=embeddings,
+    )
+
+    generation_service = providers.Factory(
+        GenerationService,
+        llm=llm,
     )

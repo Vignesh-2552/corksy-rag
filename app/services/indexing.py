@@ -13,7 +13,10 @@ from qdrant_client.models import PointStruct
 
 from app.config import settings
 from app.db.qdrant import QdrantRepository
+from app.logger import get_logger
 from app.services.embedding import embed_in_batches
+
+log = get_logger("corksy.indexing")
 
 
 def _supported_extensions() -> set[str]:
@@ -54,14 +57,19 @@ class IndexingService:
         max_bytes = settings.max_file_size_mb * 1024 * 1024
 
         ext = Path(upload.filename or "").suffix.lower()
+        log.info("Index request: file='%s' ext='%s'", upload.filename, ext)
+
         if ext not in supported:
+            log.warning("Rejected unsupported file type '%s'", ext)
             raise HTTPException(
                 status_code=400,
                 detail=f"Unsupported file type '{ext}'. Accepted: {', '.join(sorted(supported))}",
             )
 
         content = await upload.read()
+        log.debug("File size: %d bytes", len(content))
         if len(content) > max_bytes:
+            log.warning("Rejected oversized file '%s' (%d bytes)", upload.filename, len(content))
             raise HTTPException(
                 status_code=413,
                 detail=f"File '{upload.filename}' exceeds the {settings.max_file_size_mb} MB limit.",
@@ -74,11 +82,14 @@ class IndexingService:
         try:
             loader = get_loader(tmp_path, ext)
             docs = loader.load()
+            log.debug("Loaded %d raw pages/sections from '%s'", len(docs), upload.filename)
         finally:
             os.unlink(tmp_path)
 
         source_file = upload.filename or "unknown"
         chunks = self._splitter.split_documents(docs)
+        log.info("Split '%s' into %d chunks", source_file, len(chunks))
+
         for i, chunk in enumerate(chunks):
             chunk.metadata["source_file"] = source_file
             chunk.metadata["chunk_index"] = i
@@ -86,11 +97,15 @@ class IndexingService:
             chunk.metadata["indexed_at"] = datetime.now(timezone.utc).isoformat()
 
         if not chunks:
+            log.warning("No chunks extracted from '%s' — skipping upsert", source_file)
             return {"status": "indexed", "files": [source_file], "chunks": 0}
 
         try:
+            log.info("Embedding %d chunks", len(chunks))
             vectors = await embed_in_batches(chunks, self._embeddings)
+            log.info("Embedding complete")
         except Exception as exc:
+            log.error("Embedding failed: %s", exc)
             raise HTTPException(status_code=502, detail=f"Embedding failed: {exc}") from exc
 
         points = [
@@ -111,6 +126,8 @@ class IndexingService:
         try:
             await self._qdrant.upsert(points)
         except Exception as exc:
+            log.error("Qdrant upsert failed: %s", exc)
             raise HTTPException(status_code=503, detail=f"Qdrant upsert failed: {exc}") from exc
 
+        log.info("Indexed '%s': %d chunks stored", source_file, len(chunks))
         return {"status": "indexed", "files": [source_file], "chunks": len(chunks)}
