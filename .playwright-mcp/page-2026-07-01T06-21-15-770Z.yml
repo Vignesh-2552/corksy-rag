@@ -1,0 +1,23 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]: C
+      - generic [ref=e8]:
+        - heading "Corksy RAG" [level=1] [ref=e9]
+        - paragraph [ref=e10]: Ask questions about your documents
+  - main [ref=e11]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - heading "How can I help you today?" [level=2] [ref=e17]
+        - paragraph [ref=e18]: Ask a question about your uploaded documents. Answers are generated from your indexed content with source citations.
+      - generic [ref=e21]:
+        - textbox "Message input" [active] [ref=e22]:
+          - /placeholder: Send a message...
+        - generic [ref=e23]:
+          - button "Add Attachment" [ref=e24]:
+            - img
+            - generic [ref=e25]: Add Attachment
+          - generic [ref=e26]:
+            - button "Send message" [disabled]:
+              - img
+              - generic: Send message
