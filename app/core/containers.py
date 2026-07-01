@@ -7,6 +7,7 @@ from app.db.qdrant import QdrantRepository
 from app.services.generation import GenerationService
 from app.services.indexing import IndexingService
 from app.services.llm_factory import build_llm
+from app.services.query_tool import QueryToolService
 from app.services.retrieval import RetrievalService
 
 
@@ -56,3 +57,11 @@ class Container(containers.DeclarativeContainer):
         GenerationService,
         llm=llm,
     )
+
+    query_tool_service = providers.Factory(
+        QueryToolService,
+    )
+
+    # Query template names the plan node is allowed to reference — populate once
+    # corksy-support's /api/run-query templates are wired up.
+    available_queries = providers.List()

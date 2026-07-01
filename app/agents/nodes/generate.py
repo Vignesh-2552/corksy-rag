@@ -1,20 +1,20 @@
 from app.core.logger import get_logger
 from app.schemas.response import SourceReference
-from app.workflow.state import RAGState
+from app.agents.state import RAGState
 
-log = get_logger("corksy.workflow.generate")
-
-SYSTEM_PROMPT = (
-    "You are a helpful e-commerce assistant. "
-    "Answer the customer's question using ONLY the context provided below. "
-    "If the answer is not in the context, say you don't know.\n\nContext:\n{context}"
-)
+log = get_logger("corksy.agents.generate")
 
 
 async def generate(state: RAGState, generation_service) -> RAGState:
     docs = state["retrieved_docs"]
-    log.info("[generate] session=%s building answer from %d docs", state["session_id"], len(docs))
-    answer = await generation_service.generate(state["question"], docs)
+    query_results = state["query_results"]
+    log.info(
+        "[generate] session=%s building answer from %d docs, %d query result(s)",
+        state["session_id"],
+        len(docs),
+        len(query_results),
+    )
+    answer = await generation_service.generate(state["question"], docs, query_results)
     sources = [
         SourceReference(
             doc_id=doc.metadata.get("doc_id", ""),

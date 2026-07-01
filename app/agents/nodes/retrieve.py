@@ -1,7 +1,7 @@
 from app.core.logger import get_logger
-from app.workflow.state import RAGState
+from app.agents.state import RAGState
 
-log = get_logger("corksy.workflow.retrieve")
+log = get_logger("corksy.agents.retrieve")
 
 
 async def retrieve(state: RAGState, retrieval_service) -> RAGState:

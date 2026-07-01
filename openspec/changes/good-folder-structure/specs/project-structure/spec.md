@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Canonical application package layout
-The repository SHALL organize all application source code under `app/` with the following top-level sub-packages: `core/`, `api/`, `services/`, `workflow/`, `db/`, and `schemas/`.
+The repository SHALL organize all application source code under `app/` with the following top-level sub-packages: `core/`, `api/`, `services/`, `agents/`, `db/`, and `schemas/`.
 
 #### Scenario: Application bootstrap location
 - **WHEN** a developer inspects the repository root
@@ -13,7 +13,7 @@ The repository SHALL organize all application source code under `app/` with the 
 
 #### Scenario: API schema separation
 - **WHEN** a developer looks for Pydantic request/response models used by HTTP endpoints
-- **THEN** those models SHALL be located under `app/schemas/`, not mixed with service or workflow internals
+- **THEN** those models SHALL be located under `app/schemas/`, not mixed with service or agent internals
 
 ### Requirement: API layer versioning
 The HTTP layer SHALL be organized under `app/api/v1/` with one router module per endpoint group (`upload.py`, `ask.py`, `health.py`).
@@ -24,18 +24,18 @@ The HTTP layer SHALL be organized under `app/api/v1/` with one router module per
 
 #### Scenario: Package init files present
 - **WHEN** any Python package directory exists under `app/`
-- **THEN** it SHALL contain an `__init__.py` file, including `app/api/v1/` and `app/workflow/nodes/`
+- **THEN** it SHALL contain an `__init__.py` file, including `app/api/v1/` and `app/agents/nodes/`
 
-### Requirement: Service and workflow boundaries
+### Requirement: Service and agent boundaries
 Business logic SHALL be separated from HTTP routing and infrastructure concerns.
 
 #### Scenario: Service placement
-- **WHEN** a module implements domain logic (embedding, indexing, retrieval, generation, LLM factory)
+- **WHEN** a module implements domain logic that is reused outside the graph (embedding, indexing, retrieval, generation, LLM factory, external tool calls)
 - **THEN** it SHALL reside under `app/services/`
 
-#### Scenario: Workflow placement
-- **WHEN** a module defines LangGraph state, nodes, or graph compilation
-- **THEN** it SHALL reside under `app/workflow/` with individual nodes in `app/workflow/nodes/`
+#### Scenario: Agent placement
+- **WHEN** a module defines LangGraph state, nodes, graph compilation, or node-only LLM logic (e.g. intent classification, planning) that is not reused outside the graph
+- **THEN** it SHALL reside under `app/agents/` with individual nodes in `app/agents/nodes/` and their system prompts in `app/agents/prompts/` (one file per node)
 
 #### Scenario: Database client placement
 - **WHEN** a module wraps an external datastore client (Qdrant)
@@ -72,7 +72,7 @@ The repository SHALL include documented rules for where new code belongs.
 
 #### Scenario: Contributing guide present
 - **WHEN** a developer reads `CONTRIBUTING.md` or the README structure section
-- **THEN** it SHALL describe the canonical folder layout and placement rules for each layer (api, services, workflow, schemas, tests)
+- **THEN** it SHALL describe the canonical folder layout and placement rules for each layer (api, services, agents, schemas, tests)
 
 #### Scenario: System design alignment
 - **WHEN** a developer reads `SYSTEM_DESIGN.md` Section 13 (Folder Structure)

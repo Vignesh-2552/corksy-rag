@@ -1,7 +1,7 @@
 from app.core.logger import get_logger
-from app.workflow.state import RAGState
+from app.agents.state import RAGState
 
-log = get_logger("corksy.workflow.fallback")
+log = get_logger("corksy.agents.fallback")
 
 FALLBACK_MESSAGE = (
     "I couldn't find relevant information for your question. "
