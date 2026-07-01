@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from app.config import settings
+from app.core.config import settings
 
 _LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 _DATE_FORMAT = "%Y-%m-%d %H:%M:%S"

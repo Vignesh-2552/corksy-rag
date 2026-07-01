@@ -11,9 +11,9 @@ from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from qdrant_client.models import PointStruct
 
-from app.config import settings
+from app.core.config import settings
 from app.db.qdrant import QdrantRepository
-from app.logger import get_logger
+from app.core.logger import get_logger
 from app.services.embedding import embed_in_batches
 
 log = get_logger("corksy.indexing")

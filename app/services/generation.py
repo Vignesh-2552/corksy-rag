@@ -4,7 +4,7 @@ from langchain_core.documents import Document
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from app.logger import get_logger
+from app.core.logger import get_logger
 
 log = get_logger("corksy.generation")
 

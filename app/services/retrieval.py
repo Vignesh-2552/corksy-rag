@@ -4,7 +4,7 @@ from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 
 from app.db.qdrant import QdrantRepository
-from app.logger import get_logger
+from app.core.logger import get_logger
 
 log = get_logger("corksy.retrieval")
 

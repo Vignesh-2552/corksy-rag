@@ -2,7 +2,7 @@ from dependency_injector import containers, providers
 from langchain_huggingface import HuggingFaceEmbeddings
 from qdrant_client import AsyncQdrantClient
 
-from app.config import settings
+from app.core.config import settings
 from app.db.qdrant import QdrantRepository
 from app.services.generation import GenerationService
 from app.services.indexing import IndexingService

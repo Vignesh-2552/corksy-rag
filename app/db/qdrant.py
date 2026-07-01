@@ -1,7 +1,7 @@
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams
 
-from app.logger import get_logger
+from app.core.logger import get_logger
 
 log = get_logger("corksy.qdrant")
 

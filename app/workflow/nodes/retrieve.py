@@ -1,4 +1,4 @@
-from app.logger import get_logger
+from app.core.logger import get_logger
 from app.workflow.state import RAGState
 
 log = get_logger("corksy.workflow.retrieve")

@@ -1,8 +1,8 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, File, UploadFile
 
-from app.containers import Container
-from app.models.response import UploadResponse
+from app.core.containers import Container
+from app.schemas.response import UploadResponse
 from app.services.indexing import IndexingService
 
 router = APIRouter()

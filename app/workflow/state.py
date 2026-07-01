@@ -2,7 +2,7 @@ from typing import TypedDict
 
 from langchain_core.documents import Document
 
-from app.models.response import SourceReference
+from app.schemas.response import SourceReference
 
 
 class RAGState(TypedDict):

@@ -2,9 +2,9 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
-from app.containers import Container
-from app.models.request import AskRequest
-from app.models.response import AskResponse
+from app.core.containers import Container
+from app.schemas.request import AskRequest
+from app.schemas.response import AskResponse
 from app.services.generation import GenerationService
 from app.services.retrieval import RetrievalService
 from app.workflow.graph import build_rag_graph

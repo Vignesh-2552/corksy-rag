@@ -459,10 +459,14 @@ async def fallback(state: RAGState) -> RAGState:
 
 ```
 corksy-rag/
+├── main.py                      # Thin shim → app.main:app
 ├── app/
 │   ├── main.py                  # FastAPI app, DI wiring, lifespan
-│   ├── containers.py            # dependency-injector Container
-│   ├── config.py                # pydantic-settings config
+│   │
+│   ├── core/
+│   │   ├── config.py            # pydantic-settings config
+│   │   ├── containers.py        # dependency-injector Container
+│   │   └── logger.py            # Logging setup
 │   │
 │   ├── api/
 │   │   └── v1/
@@ -488,11 +492,12 @@ corksy-rag/
 │   ├── db/
 │   │   └── qdrant.py            # Qdrant client + collection setup
 │   │
-│   └── models/
+│   └── schemas/
 │       ├── request.py           # Pydantic request schemas
 │       └── response.py          # Pydantic response schemas
 │
 ├── tests/
+│   ├── conftest.py              # Shared pytest fixtures
 │   ├── unit/
 │   └── integration/
 │
@@ -500,6 +505,7 @@ corksy-rag/
 │   ├── Dockerfile
 │   └── docker-compose.yml       # API + Qdrant
 │
+├── CONTRIBUTING.md              # Folder placement rules
 ├── pyproject.toml
 ├── .env.example
 └── SYSTEM_DESIGN.md

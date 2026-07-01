@@ -1,5 +1,5 @@
-from app.logger import get_logger
-from app.models.response import SourceReference
+from app.core.logger import get_logger
+from app.schemas.response import SourceReference
 from app.workflow.state import RAGState
 
 log = get_logger("corksy.workflow.generate")
